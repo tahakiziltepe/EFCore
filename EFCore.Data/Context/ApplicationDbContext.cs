@@ -19,6 +19,11 @@ namespace EFCore.Data.Context
 
         }
 
+        public DbSet<Course> Courses { get; set; }
+        public DbSet<Teacher> Teachers { get; set; }
+        public DbSet<Student> Students { get; set; }
+
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
@@ -56,12 +61,12 @@ namespace EFCore.Data.Context
                 entity.Property(i => i.BirthDate).HasColumnName("birth_date");
             });
 
-            modelBuilder.Entity<Courses>(entity =>
+            modelBuilder.Entity<Course>(entity =>
             {
                 entity.ToTable("courses");
 
                 entity.Property(i => i.Id).HasColumnName("id").HasColumnType("int").UseIdentityColumn(1, 1);
-                entity.Property(i => i.Name).HasColumnName("first_name").HasColumnType("varchar").HasMaxLength(100);
+                entity.Property(i => i.Name).HasColumnName("name").HasColumnType("varchar").HasMaxLength(100);
                 entity.Property(i => i.IsActive).HasColumnName("is_active");
             });
 

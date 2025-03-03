@@ -23,7 +23,7 @@ namespace EFCore.Data.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("EFCore.Data.Models.Courses", b =>
+            modelBuilder.Entity("EFCore.Data.Models.Course", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -40,7 +40,7 @@ namespace EFCore.Data.Migrations
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("varchar")
-                        .HasColumnName("first_name");
+                        .HasColumnName("name");
 
                     b.HasKey("Id");
 

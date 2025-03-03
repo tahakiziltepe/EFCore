@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace EFCore.Data.Models
 {
-    public class Courses
+    public class Course
     {
         public int Id { get; set; }
         public string Name { get; set; }

@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EFCore.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250303154623_changedLengthOfStudentFirstNameAndLastNameMig")]
-    partial class changedLengthOfStudentFirstNameAndLastNameMig
+    [Migration("20250303160600_coursesNameFixed")]
+    partial class coursesNameFixed
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -26,7 +26,7 @@ namespace EFCore.Data.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("EFCore.Data.Models.Courses", b =>
+            modelBuilder.Entity("EFCore.Data.Models.Course", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -43,7 +43,7 @@ namespace EFCore.Data.Migrations
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("varchar")
-                        .HasColumnName("first_name");
+                        .HasColumnName("name");
 
                     b.HasKey("Id");
 
