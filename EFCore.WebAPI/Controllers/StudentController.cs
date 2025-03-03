@@ -20,11 +20,23 @@ namespace EFCore.WebAPI.Controllers
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            var students = await applicationDbContext.Students.ToListAsync();
-            return Ok(students);
+            var allStudents = await applicationDbContext.Students.ToListAsync();
+
+            //var idFilter = await applicationDbContext.Students
+            //                        .Where(x => x.Id == 25 && x.FirstName != "NetUser")
+            //                        .Where(x => x.Number == 1)
+            //                        .OrderByDescending(x => x.BirthDate)
+            //                        .Select(x => new { x.FirstName, x.LastName })
+            //                        .ToListAsync();
+
+            // ---- OR
+
+            //var students = applicationDbContext.Students.AsQueryable();
+            //students.Where(x => x.Id == 25 && x.FirstName != "NetUser");
+
+            return Ok(allStudents);
         }
-
-
+        
         [HttpPost]
         public async Task<IActionResult> Add()
         {
