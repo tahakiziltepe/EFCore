@@ -4,6 +4,7 @@ using EFCore.Data.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EFCore.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250303163230_studentAddressAdded2")]
+    partial class studentAddressAdded2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -22,47 +25,6 @@ namespace EFCore.Data.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
-
-            modelBuilder.Entity("CourseStudent", b =>
-                {
-                    b.Property<int>("CoursesId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("StudentsId")
-                        .HasColumnType("int");
-
-                    b.HasKey("CoursesId", "StudentsId");
-
-                    b.HasIndex("StudentsId");
-
-                    b.ToTable("CourseStudent", "dbo");
-                });
-
-            modelBuilder.Entity("EFCore.Data.Models.Book", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Author")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("StudentId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("StudentId");
-
-                    b.ToTable("Book", "dbo");
-                });
 
             modelBuilder.Entity("EFCore.Data.Models.Course", b =>
                 {
@@ -97,10 +59,6 @@ namespace EFCore.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("AddressId")
-                        .HasColumnType("int")
-                        .HasColumnName("address_id");
-
                     b.Property<DateTime>("BirthDate")
                         .HasColumnType("datetime2")
                         .HasColumnName("birth_date");
@@ -122,9 +80,6 @@ namespace EFCore.Data.Migrations
                         .HasColumnName("number");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("AddressId")
-                        .IsUnique();
 
                     b.ToTable("students", "dbo");
                 });
@@ -162,7 +117,14 @@ namespace EFCore.Data.Migrations
                         .HasColumnType("nvarchar(1000)")
                         .HasColumnName("full_address");
 
+                    b.Property<int>("StudentId")
+                        .HasColumnType("int")
+                        .HasColumnName("student_id");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("StudentId")
+                        .IsUnique();
 
                     b.ToTable("student_addresses", "dbo");
                 });
@@ -197,53 +159,21 @@ namespace EFCore.Data.Migrations
                     b.ToTable("teachers", "dbo");
                 });
 
-            modelBuilder.Entity("CourseStudent", b =>
-                {
-                    b.HasOne("EFCore.Data.Models.Course", null)
-                        .WithMany()
-                        .HasForeignKey("CoursesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("EFCore.Data.Models.Student", null)
-                        .WithMany()
-                        .HasForeignKey("StudentsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("EFCore.Data.Models.Book", b =>
+            modelBuilder.Entity("EFCore.Data.Models.StudentAddress", b =>
                 {
                     b.HasOne("EFCore.Data.Models.Student", "Student")
-                        .WithMany("Books")
-                        .HasForeignKey("StudentId")
+                        .WithOne("Address")
+                        .HasForeignKey("EFCore.Data.Models.StudentAddress", "StudentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
-                        .HasConstraintName("student_book_id_fk");
+                        .HasConstraintName("student_address_id_");
 
                     b.Navigation("Student");
                 });
 
             modelBuilder.Entity("EFCore.Data.Models.Student", b =>
                 {
-                    b.HasOne("EFCore.Data.Models.StudentAddress", "Address")
-                        .WithOne("Student")
-                        .HasForeignKey("EFCore.Data.Models.Student", "AddressId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("student_address_student_id_fk");
-
-                    b.Navigation("Address");
-                });
-
-            modelBuilder.Entity("EFCore.Data.Models.Student", b =>
-                {
-                    b.Navigation("Books");
-                });
-
-            modelBuilder.Entity("EFCore.Data.Models.StudentAddress", b =>
-                {
-                    b.Navigation("Student")
+                    b.Navigation("Address")
                         .IsRequired();
                 });
 #pragma warning restore 612, 618
