@@ -84,7 +84,7 @@ namespace EFCore.Data.Context
             {
                 entity.ToTable("student_addresses");
 
-                entity.Property(i => i.Id).HasColumnName("id").HasColumnType("int").UseIdentityColumn(1, 1);
+                entity.Property(i => i.Id).HasColumnName("id").HasColumnType("int").UseIdentityColumn(1, 1);//.ValueGeneratedOnAdd();
                 entity.Property(i => i.City).HasColumnName("city").HasMaxLength(50);
                 entity.Property(i => i.District).HasColumnName("district").HasMaxLength(100);
                 entity.Property(i => i.Country).HasColumnName("country").HasMaxLength(50);

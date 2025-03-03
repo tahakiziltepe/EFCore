@@ -27,28 +27,66 @@ namespace EFCore.WebAPI.Controllers
         [HttpPost]
         public async Task<IActionResult> Add()
         {
-            StudentAddress address = new StudentAddress()
-            {
-                City = "Istanbul",
-                Country = "Turkiye",
-                District = "Kadiköy",
-                FullAddress = "173. Sk. No: 9"
-            };
+            //StudentAddress address = new StudentAddress()
+            //{
+            //    City = "Istanbul",
+            //    Country = "Turkiye",
+            //    District = "Kadiköy",
+            //    FullAddress = "173. Sk. No: 9"
+            //};
 
-            await applicationDbContext.StudentAddresses.AddAsync(address);
-            await applicationDbContext.SaveChangesAsync();
+            //await applicationDbContext.StudentAddresses.AddAsync(address);
+            //await applicationDbContext.SaveChangesAsync();
 
             Student st = new Student()
             {
-                FirstName = "Taha",
-                LastName = "Kiziltepe",
+                FirstName = "User",
+                LastName = "Name",
                 Number = 1,
-                AddressId = address.Id
+                BirthDate = DateTime.Now,
+
+                //AddressId = address.Id
+                // ---- OR
+                Address = new StudentAddress()
+                {
+                    City = "Istanbul",
+                    Country = "Turkiye",
+                    District = "Kadiköy",
+                    FullAddress = "173. Sk. No: 20"
+                }
             };
 
             await applicationDbContext.Students.AddAsync(st);
             await applicationDbContext.SaveChangesAsync();
             
+            return Ok();
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var student = await applicationDbContext.Students.FindAsync(id);
+            // var student = await applicationDbContext.Students.FirstOrDefaultAsync(x => x.Id == id); 
+            // var student = await applicationDbContext.Students.Where(x => x.Id == id).SingleOrDefaultAsync();  
+
+            applicationDbContext.Students.Remove(student);
+
+            await applicationDbContext.SaveChangesAsync();
+            
+            return Ok();
+        }
+
+
+        [HttpPut]
+        public async Task<IActionResult> Update(int id)
+        {
+            var student = await applicationDbContext.Students.FirstOrDefaultAsync();
+            // var student = await applicationDbContext.Students.Where().SingleOrDefaultAsync();  
+
+            student.BirthDate = DateTime.Now;
+
+            await applicationDbContext.SaveChangesAsync();
+
             return Ok();
         }
 
