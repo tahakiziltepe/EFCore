@@ -1,28 +1,35 @@
 ﻿using EFCore.Data.Models;
-using Microsoft.
+using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace EFCore.Data.Context
 {
-    public class ApplicationDbClass : DbContext
+    public class ApplicationDbContext : DbContext
     {
-        public ApplicationDbClass(DbContextOptions<ApplicationDbClass> options) : base(options)
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
         }
 
-        protected ApplicationDbClass()
+        public ApplicationDbContext()
         {
+
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            if (!optionsBuilder.IsConfigured) 
-            { 
-                 // configuration
-                 optionsBuilder.UseSqlServer("Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=efcore;Integrated Security=True;");
+            if (!optionsBuilder.IsConfigured)
+            {
+                // configuration
+                optionsBuilder.UseSqlServer("Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=efcore;Integrated Security=True;");
             }
 
             base.OnConfiguring(optionsBuilder);
         }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -33,8 +40,8 @@ namespace EFCore.Data.Context
                 entity.ToTable("students");
 
                 entity.Property(i => i.Id).HasColumnName("id").HasColumnType("int").UseIdentityColumn(1, 1).IsRequired();
-                entity.Property(i => i.FirstName).HasColumnName("first_name").HasColumnType("varchar").HasMaxLength(100);
-                entity.Property(i => i.LastName).HasColumnName("last_name").HasColumnType("varchar").HasMaxLength(100);
+                entity.Property(i => i.FirstName).HasColumnName("first_name").HasColumnType("varchar").HasMaxLength(250);
+                entity.Property(i => i.LastName).HasColumnName("last_name").HasColumnType("varchar").HasMaxLength(250);
                 entity.Property(i => i.Number).HasColumnName("number");
                 entity.Property(i => i.BirthDate).HasColumnName("birth_date");
             });
@@ -62,6 +69,5 @@ namespace EFCore.Data.Context
 
             base.OnModelCreating(modelBuilder);
         }
-
     }
 }
