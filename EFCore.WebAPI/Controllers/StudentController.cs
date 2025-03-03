@@ -27,11 +27,23 @@ namespace EFCore.WebAPI.Controllers
         [HttpPost]
         public async Task<IActionResult> Add()
         {
+            StudentAddress address = new StudentAddress()
+            {
+                City = "Istanbul",
+                Country = "Turkiye",
+                District = "Kadiköy",
+                FullAddress = "173. Sk. No: 9"
+            };
+
+            await applicationDbContext.StudentAddresses.AddAsync(address);
+            await applicationDbContext.SaveChangesAsync();
+
             Student st = new Student()
             {
                 FirstName = "Taha",
                 LastName = "Kiziltepe",
                 Number = 1,
+                AddressId = address.Id
             };
 
             await applicationDbContext.Students.AddAsync(st);
