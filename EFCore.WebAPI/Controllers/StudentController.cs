@@ -24,6 +24,7 @@ namespace EFCore.WebAPI.Controllers
             return Ok(students);
         }
 
+
         [HttpPost]
         public async Task<IActionResult> Add()
         {
@@ -65,22 +66,28 @@ namespace EFCore.WebAPI.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            var student = await applicationDbContext.Students.FindAsync(id);
-            // var student = await applicationDbContext.Students.FirstOrDefaultAsync(x => x.Id == id); 
+            // var student = await applicationDbContext.Students.FindAsync(id);
+            var student = await applicationDbContext.Students.FirstOrDefaultAsync(x => x.Id == id);
             // var student = await applicationDbContext.Students.Where(x => x.Id == id).SingleOrDefaultAsync();  
 
-            applicationDbContext.Students.Remove(student);
+            if (student == null)
+            {
+                return NotFound($"Not Found: {id}");
+            }
+            else
+            {
+                applicationDbContext.Students.Remove(student);
+                await applicationDbContext.SaveChangesAsync();
+                return Ok();
+            }
 
-            await applicationDbContext.SaveChangesAsync();
-            
-            return Ok();
         }
 
 
-        [HttpPut]
+        [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id)
         {
-            var student = await applicationDbContext.Students.FirstOrDefaultAsync();
+            var student = await applicationDbContext.Students.FirstOrDefaultAsync(x=>x.Id == id);
             // var student = await applicationDbContext.Students.Where().SingleOrDefaultAsync();  
 
             student.BirthDate = DateTime.Now;
@@ -89,6 +96,7 @@ namespace EFCore.WebAPI.Controllers
 
             return Ok();
         }
+
 
 
     }
