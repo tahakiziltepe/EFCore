@@ -17,7 +17,7 @@ namespace EFCore.WebAPI.Controllers
             this.applicationDbContext = applicationDbContext;
         }
 
-        [HttpGet]
+        [HttpGet("getAllStudents")]
         public async Task<IActionResult> Get()
         {
             var allStudents = await applicationDbContext.Students.ToListAsync();
@@ -36,46 +36,85 @@ namespace EFCore.WebAPI.Controllers
 
             return Ok(allStudents);
         }
-        
-        [HttpPost]
-        public async Task<IActionResult> Add()
+
+        [HttpGet("getStudentsById")]
+        public async Task<IActionResult> Get(int id)
         {
-            //StudentAddress address = new StudentAddress()
+            var student = await applicationDbContext.Students.Where(x => x.Id == id).FirstOrDefaultAsync();
+            return Ok(student);
+        }
+
+        [HttpPost("createStudentWithNewAddress")]
+        public async Task<IActionResult> CreateStudentWithNewAddress(
+                                                string firstName, 
+                                                string lastName, 
+                                                int number, 
+                                                DateTime birthDate,
+                                                string country,
+                                                string city,
+                                                string district,
+                                                string fullAddress
+                                            )
+        {
+            ////StudentAddress address = new StudentAddress()
+            ////{
+            ////    City = "Istanbul",
+            ////    Country = "Turkiye",
+            ////    District = "Kadiköy",
+            ////    FullAddress = "173. Sk. No: 9"
+            ////};
+
+            ////await applicationDbContext.StudentAddresses.AddAsync(address);
+            ////await applicationDbContext.SaveChangesAsync();
+
+            //Student st = new Student()
             //{
-            //    City = "Istanbul",
-            //    Country = "Turkiye",
-            //    District = "Kadiköy",
-            //    FullAddress = "173. Sk. No: 9"
+            //    FirstName = "User",
+            //    LastName = "Name",
+            //    Number = 1,
+            //    BirthDate = DateTime.Now,
+
+            //    //AddressId = address.Id
+            //    // ---- OR
+            //    Address = new StudentAddress()
+            //    {
+            //        City = "Istanbul",
+            //        Country = "Turkiye",
+            //        District = "Kadiköy",
+            //        FullAddress = "173. Sk. No: 20"
+            //    }
             //};
 
-            //await applicationDbContext.StudentAddresses.AddAsync(address);
-            //await applicationDbContext.SaveChangesAsync();
+            StudentAddress studentAddress = new StudentAddress()
+            {
+                City = city,
+                Country = country,
+                District = district,
+                FullAddress = fullAddress
+            };
 
             Student st = new Student()
             {
-                FirstName = "User",
-                LastName = "Name",
-                Number = 1,
-                BirthDate = DateTime.Now,
-
-                //AddressId = address.Id
-                // ---- OR
-                Address = new StudentAddress()
-                {
-                    City = "Istanbul",
-                    Country = "Turkiye",
-                    District = "Kadiköy",
-                    FullAddress = "173. Sk. No: 20"
-                }
+                FirstName = firstName,
+                LastName = lastName,
+                Number = number,
+                BirthDate = birthDate,
+                Address = studentAddress
             };
 
-            await applicationDbContext.Students.AddAsync(st);
-            await applicationDbContext.SaveChangesAsync();
-            
-            return Ok();
+            try
+            {
+                await applicationDbContext.Students.AddAsync(st);
+                await applicationDbContext.SaveChangesAsync();
+                return Ok($"Created: {st.Id}");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }   
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("deleteStudent")]
         public async Task<IActionResult> Delete(int id)
         {
             // var student = await applicationDbContext.Students.FindAsync(id);
@@ -88,25 +127,45 @@ namespace EFCore.WebAPI.Controllers
             }
             else
             {
-                applicationDbContext.Students.Remove(student);
-                await applicationDbContext.SaveChangesAsync();
-                return Ok();
+                try
+                {
+                    applicationDbContext.Students.Remove(student);
+                    await applicationDbContext.SaveChangesAsync();
+                    return Ok($"Deleted: {id}");
+                }
+                catch (Exception ex)
+                {
+                    return BadRequest(ex.Message);
+                }
             }
 
         }
 
 
-        [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id)
+        [HttpPut("updateStudentNumber")]
+        public async Task<IActionResult> Update(int id, int number)
         {
             var student = await applicationDbContext.Students.FirstOrDefaultAsync(x=>x.Id == id);
             // var student = await applicationDbContext.Students.Where().SingleOrDefaultAsync();  
 
-            student.BirthDate = DateTime.Now;
-
-            await applicationDbContext.SaveChangesAsync();
-
-            return Ok();
+            if (student == null)
+            {
+                return NotFound($"Not Found: {id}");
+            }
+            else
+            {
+                try
+                {
+                    student.Number = number;
+                    await applicationDbContext.SaveChangesAsync();
+                    return Ok($"Updated: {id}");
+                }
+                catch (Exception ex)
+                {
+                    return BadRequest(ex.Message);
+                }
+                
+            }
         }
 
 
